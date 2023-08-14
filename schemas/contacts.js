@@ -12,6 +12,18 @@ const schema = Joi.object({
       .required()
   });
 
+  const customMessages = {
+    'string.base': '{#label} must be string',
+    'string.empty': '{#label} can not be empty',
+    'string.email': '{#label} incorrect',
+    'any.required': 'missing required {#label} field',
+  };
+
+  const options = {
+    messages: customMessages,
+  };
+
   module.exports = {
     schema,
+    options
   }

@@ -1,13 +1,14 @@
+const { options } = require('../schemas/contacts');
 const { HttpError } = require('../helpers')
 
 const validateBody = schema => {
     const func = (req,res,next) => {
-        const { error } = schema.validate(req.body);
+        const { error } = schema.validate(req.body, options);
         if(error) {
 
-            const fieldName = error.details[0].context.key;
+            const errorMessage = error.details[0].message;
         
-            next(HttpError(400, `missing required ${fieldName}, ${error.message}`))
+            next(HttpError(400, errorMessage))
 
         }
         next();
