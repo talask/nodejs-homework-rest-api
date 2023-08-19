@@ -1,23 +1,24 @@
+const mongoose = require('mongoose');
 const app = require("./app");
 
-const mongoose = require('mongoose');
-//const env = require('dot');
 
-//const DB_HOST = "mongodb+srv://Natalya:aLQIpiovXG1LrT0o@cluster0.hiykldq.mongodb.net/connect_db?retryWrites=true&w=majority";
-
-require('dotenv').config();
-
-
-const { DB_HOST } = process.env;
+const { DB_HOST, PORT } = process.env;
 mongoose.Promise = global.Promise;
 
-//mongoose.connect(DB_HOST);
+mongoose.set('strictQuery', true);
 mongoose.connect(DB_HOST, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+})
+.then( () => {
+  console.log("Connect db")
+  app.listen(PORT)
+}
+
+)
+.catch(error => {
+  console.log(error.message);
+  process.exit(1)
+})
 
 
-app.listen(3000, () => {
-  console.log("Server is running. Use our API on port: 3000");
-});
