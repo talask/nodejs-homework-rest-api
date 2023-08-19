@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const { DB_HOST } = process.env;
 mongoose.Promise = global.Promise;
-console.log(DB_HOST)
+
 //mongoose.connect(DB_HOST);
 mongoose.connect(DB_HOST, {
   useNewUrlParser: true,
