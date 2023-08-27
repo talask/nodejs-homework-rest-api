@@ -9,6 +9,7 @@ const schema = Joi.object({
   
     phone: Joi.string()
       .pattern(new RegExp(/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/))
+
       .required(),
     
     favorite: Joi.boolean(),
@@ -16,6 +17,7 @@ const schema = Joi.object({
 
   const schemaUpdateFavorite = Joi.object({
     favorite: Joi.boolean().required(),
+
   });
 
   const customMessages = {
