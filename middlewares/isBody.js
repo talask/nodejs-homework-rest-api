@@ -1,9 +1,23 @@
 const { HttpError } = require('../helpers')
 
-const isBody = () => {
+const isBody = type => {
     const func = (req,res,next) => {
+        
         if (Object.keys(req.body).length === 0) {
-            next(HttpError(400, "missing fields"));
+
+            let errorMessage = '';
+
+            switch(type){
+                case 'put':
+                    errorMessage = "missing fields";
+                    break;
+                case 'patch':
+                    errorMessage = "missing field favorite";
+                    break;
+                default: 
+                    errorMessage = "empty object";
+            }
+            next(HttpError(400, errorMessage));
         }
         next();
     }

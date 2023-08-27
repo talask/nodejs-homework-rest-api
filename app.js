@@ -4,6 +4,8 @@ const cors = require('cors')
 
 const contactsRouter = require('./routes/api/contacts')
 
+require('dotenv').config();
+
 const app = express()
 const port = 3000;
 
@@ -22,11 +24,9 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message })
- // res.status(500).json({ message: err.message })
+
+ 
 })
 
-app.listen(port, () => {
-  console.log(`Сервер запущен на порту ${port}`);
-});
 
 module.exports = app

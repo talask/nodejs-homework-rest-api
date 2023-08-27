@@ -1,12 +1,12 @@
-
-const contactsModule = require('../models/contacts');
+  
+const Contact = require('../models/contact');
 
 const { HttpError, ctrlWrapper } = require('../helpers')
 
 
 const listContacts = async (req, res) => {
    
-  const contacts = await contactsModule.listContacts();
+  const contacts = await Contact.find();
   res.json(contacts)
       
   }
@@ -15,7 +15,7 @@ const listContacts = async (req, res) => {
   const getContactById = async (req, res) => {
    
     const { contactId } = req.params;
-    const contact = await contactsModule.getContactById(contactId);
+    const contact = await Contact.findById(contactId);
   
     if (!contact) {
       throw HttpError(404, 'Not found')
@@ -28,7 +28,7 @@ const listContacts = async (req, res) => {
 
   const addContact= async (req, res) => {
      
-    const contact = await contactsModule.addContact(req.body);
+    const contact = await Contact.create(req.body);
       if(!contact) {
         throw HttpError(400, "The contact is in the contact list");
       }
@@ -40,7 +40,7 @@ const listContacts = async (req, res) => {
   const removeContact = async (req, res) => {
    
     const { contactId } = req.params;
-    const contact = await contactsModule.removeContact(contactId)
+    const contact = await Contact.findByIdAndRemove(contactId)
   
     if (!contact) {
       throw HttpError(404, 'Not found')
@@ -53,9 +53,25 @@ const listContacts = async (req, res) => {
   const updateContact = async (req, res) => {
       
     const { contactId } = req.params;
-    const contact = await contactsModule.updateContact(contactId, req.body);
+   
+   
+    const contact = await Contact.findByIdAndUpdate(contactId, req.body, {new: true});
   
     if (!contact) {
+      throw HttpError(404, 'Not found')
+    } 
+  
+    res.json(contact)
+  
+  }
+
+  const updateFavorite = async (req, res) => {
+      
+    const { contactId } = req.params;
+    const contact = await Contact.findByIdAndUpdate(contactId, req.body, {new: true});
+   
+    if (!contact) {
+      
       throw HttpError(404, 'Not found')
     } 
   
@@ -69,4 +85,7 @@ const listContacts = async (req, res) => {
     addContact: ctrlWrapper(addContact),
     removeContact: ctrlWrapper(removeContact),
     updateContact: ctrlWrapper(updateContact),
+    updateFavorite: ctrlWrapper(updateFavorite),
   }
+
+
