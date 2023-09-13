@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-    const { email ,password } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({email});
 
@@ -17,9 +17,12 @@ const register = async (req, res) => {
 
     const newUser = await User.create({...req.body, password: hashPassword});
 
+
     res.status(201).json({
-        email: newUser.email,
-        password: newUser.password,
+        user: {
+            email,
+            subscription: newUser.subscription,
+        },
     })
 }
 
@@ -29,13 +32,13 @@ const login = async (req, res) => {
     const user = await User.findOne({email});
 
     if(!user) {
-        throw HttpError(401, 'Email not found')
+        throw HttpError(401, 'Email or pasword is wrong')
     }
     
     const passwordCompare = await bcrypt.compare(password, user.password);
    
     if(!passwordCompare){
-        throw HttpError(401, 'Pasword not found')
+        throw HttpError(401, 'Email or pasword is wrong')
     }
 
     const payload = {
@@ -44,18 +47,23 @@ const login = async (req, res) => {
 
     const token = jwt.sign(payload,SECRET_KEY, { expiresIn: '20h' });
     await User.findByIdAndUpdate(user._id, { token });
-
+    
+    const { subscription } = user;
     res.json({
         token,
+        user: {
+            email,
+            subscription,
+        }
     })
 }
 
 const getCurrent = async (req,res) => {
-    const { email, password } = req.user;
+    const { email, subscription } = req.user;
 
-    req.json({
+    res.json({
         email,
-        password,
+        subscription,
 
     })
 }

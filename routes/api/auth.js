@@ -9,7 +9,7 @@ const router = express.Router()
 router.post('/register', validateBody(signInSchema), ctrl.register);
 router.post('/login', validateBody(loginSchema), ctrl.login);
 router.post('/logout', authenticate, ctrl.logout);
-router.post('/current', authenticate, ctrl.getCurrent);
+router.get('/current', authenticate, ctrl.getCurrent);
 
 
 
