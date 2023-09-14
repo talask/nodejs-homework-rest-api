@@ -6,7 +6,9 @@ const { HttpError, ctrlWrapper } = require('../helpers')
 
 const listContacts = async (req, res) => {
    
-  const contacts = await Contact.find();
+  const { _id: owner } = req.user; 
+ 
+  const contacts = await Contact.find({owner},"-createdAt -updatedAt");
   res.json(contacts)
       
   }
@@ -14,8 +16,10 @@ const listContacts = async (req, res) => {
 
   const getContactById = async (req, res) => {
    
+    const { _id: owner } = req.user; 
     const { contactId } = req.params;
-    const contact = await Contact.findById(contactId);
+    
+    const contact = await Contact.findOne({owner, _id: contactId});
   
     if (!contact) {
       throw HttpError(404, 'Not found')
@@ -28,8 +32,9 @@ const listContacts = async (req, res) => {
 
   const addContact= async (req, res) => {
      
-    const contact = await Contact.create(req.body);
-      if(!contact) {
+    const { _id: owner } = req.user; 
+    const contact = await Contact.create({...req.body, owner });
+    if(!contact) {
         throw HttpError(400, "The contact is in the contact list");
       }
   
@@ -39,8 +44,9 @@ const listContacts = async (req, res) => {
 
   const removeContact = async (req, res) => {
    
+    const { _id: owner } = req.user; 
     const { contactId } = req.params;
-    const contact = await Contact.findByIdAndRemove(contactId)
+    const contact = await Contact.findOneAndRemove({owner, _id: contactId})
   
     if (!contact) {
       throw HttpError(404, 'Not found')
@@ -52,10 +58,10 @@ const listContacts = async (req, res) => {
 
   const updateContact = async (req, res) => {
       
+    const { _id: owner } = req.user; 
     const { contactId } = req.params;
    
-   
-    const contact = await Contact.findByIdAndUpdate(contactId, req.body, {new: true});
+    const contact = await Contact.findOneAndUpdate({owner, _id: contactId}, req.body, {new: true});
   
     if (!contact) {
       throw HttpError(404, 'Not found')
@@ -67,8 +73,9 @@ const listContacts = async (req, res) => {
 
   const updateFavorite = async (req, res) => {
       
+    const { _id: owner } = req.user; 
     const { contactId } = req.params;
-    const contact = await Contact.findByIdAndUpdate(contactId, req.body, {new: true});
+    const contact = await Contact.findOneAndUpdate({owner, _id: contactId}, req.body, {new: true});
    
     if (!contact) {
       
