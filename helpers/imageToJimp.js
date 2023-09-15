@@ -1,17 +1,12 @@
 var Jimp = require("jimp");
 
-const imageToJimp = (pathToFile, newPathToFile) => {
-   
-    Jimp.read(pathToFile)
-  .then((image) => {
-   
-    image.resize(250, 250).write(newPathToFile);
-    return;
-  })
-  .catch((err) => {
-   console.log(err)
-  });
-
+const imageToJimp = async (pathToFile, newPathToFile) => {
+  try {
+    const image = await Jimp.read(pathToFile);
+    await image.resize(250, 250).writeAsync(newPathToFile);
+  } catch (err) {
+    throw err;
+  }
 }
 
 module.exports = imageToJimp;
