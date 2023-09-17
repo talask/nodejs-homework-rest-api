@@ -3,7 +3,7 @@ const { HttpError } = require('../helpers')
 
 const validateBody = schema => {
     
-    const func = (req,res,next) => {
+    const func = (req, res, next) => {
        
         const { error } = schema.validate(req.body, options);
         if(error) {
@@ -13,7 +13,7 @@ const validateBody = schema => {
             next(HttpError(400, errorMessage))
 
         }
-      
+       
         next();
     }
 
